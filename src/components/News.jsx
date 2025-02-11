@@ -1,10 +1,57 @@
 import Calendar from "./Calendar";
-import Weather from "./Weather";
 import "./News.css";
-
+import Weather from "./Weather";
 import userImg from "../assets/images/user.jpg";
+import noImg from "../assets/images/no-img.png";
+import axios from "axios";
+import { useEffect, useState } from "react";
+
+const categories = [
+  "general",
+  "business",
+  "entertainment",
+  "health",
+  "science",
+  "sports",
+  "technology",
+];
 
 const News = () => {
+  const [headline, setHeadline] = useState(null);
+
+  const [news, setNews] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("general");
+
+  useEffect(() => {
+    const fetchNews = async () => {
+      const url = `https://newsapi.org/v2/top-headlines?country=us&category=${selectedCategory}&apiKey=${
+        import.meta.env.VITE_REACT_APP_NEWS_API_KEY
+      }`;
+      const res = await axios.get(url);
+      // console.log(res);
+
+      const fetchedNews = res.data.articles;
+      // console.log(fetchedNews);
+
+      fetchedNews.forEach((article) => {
+        if (!article.image) {
+          article.image = noImg;
+        }
+      });
+
+      setHeadline(fetchedNews[0]);
+      setNews(fetchedNews.slice(1, 7)); // GETTING 6 ARTICLES
+      // console.log(news);
+    };
+
+    fetchNews();
+  }, [selectedCategory]);
+
+  const handleCategoryClick = (e, category) => {
+    e.preventDefault(); // e => EVENT OBJECT
+    setSelectedCategory(category);
+  };
+
   return (
     <div className="news">
       <header className="news-header">
@@ -28,33 +75,16 @@ const News = () => {
           <nav className="categories">
             <h1 className="nav-heading">Categories</h1>
             <div className="nav-links">
-              <a href="" className="nav-link">
-                General
-              </a>
-              <a href="" className="nav-link">
-                World
-              </a>
-              <a href="" className="nav-link">
-                Business
-              </a>
-              <a href="" className="nav-link">
-                Technology
-              </a>
-              <a href="" className="nav-link">
-                Entertainment
-              </a>
-              <a href="" className="nav-link">
-                Sports
-              </a>
-              <a href="" className="nav-link">
-                Science
-              </a>
-              <a href="" className="nav-link">
-                Health
-              </a>
-              <a href="" className="nav-link">
-                Nation
-              </a>
+              {categories.map((category) => (
+                <a
+                  href="#"
+                  key={category}
+                  className="nav-link"
+                  onClick={(e) => handleCategoryClick(e, category)}
+                >
+                  {category}
+                </a>
+              ))}
               <a href="" className="nav-link">
                 Bookmarks <i className="fa-regular fa-bookmark"></i>
               </a>
@@ -63,8 +93,26 @@ const News = () => {
         </div>
 
         <div className="news-section">
-          <div className="headline">Headline</div>
-          <div className="news-grid">News Grid</div>
+          {headline && (
+            <div className="headline">
+              <img src={headline?.urlToImage || noImg} alt={headline?.title} />
+              <h2 className="headline-title">
+                {headline?.title}
+                <i className="fa-regular fa-bookmark bookmark"></i>
+              </h2>
+            </div>
+          )}
+          <div className="news-grid">
+            {news.map((article, index) => (
+              <div key={index} className="news-grid-item">
+                <img src={article.urlToImage || noImg} alt={article.title} />
+                <h3>
+                  {article.title}
+                  <i className="fa-regular fa-bookmark bookmark"></i>
+                </h3>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="my-blogs">My Blogs</div>
