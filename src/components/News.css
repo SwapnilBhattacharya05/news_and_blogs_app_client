@@ -59,6 +59,7 @@
   transform: translateY(-50%);
   color: #bbb;
   font-size: 1.8rem;
+  cursor: pointer;
 }
 
 .news-content {
@@ -170,6 +171,12 @@
   border-radius: 1rem;
   margin-bottom: 2rem;
   position: relative;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    img {
+      opacity: 0.6;
+    }
+  }
 }
 
 .headline-title {
@@ -221,6 +228,12 @@
   min-height: 15rem;
   border-radius: 1rem;
   position: relative;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    img {
+      opacity: 0.6;
+    }
+  }
 }
 
 .news-grid-item img {
