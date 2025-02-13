@@ -23,7 +23,7 @@ html {
   place-items: center;
 }
 
-.news-blog-app {
+.news-blogs-app {
   width: 95vw;
   /* TAKE UP 95% OF THIS MINIMUM VIEWPORT DIMENSION */
   height: 95vmin;

@@ -242,7 +242,14 @@ const News = () => {
           <Calendar />
         </div>
       </div>
-      <footer className="news-footer">Footer</footer>
+      <footer className="news-footer">
+        <p>
+          <span>News & Blogs App</span>
+        </p>
+        <p>
+          &copy; All Rights Reserved. By Swapnil Bhattacharya
+        </p>
+      </footer>
     </div>
   );
 };
