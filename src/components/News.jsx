@@ -9,6 +9,11 @@ import { useEffect, useState } from "react";
 import NewsModal from "./NewsModal";
 import Bookmarks from "./Bookmarks";
 
+import blogImg1 from "../assets/images/blog1.jpg";
+import blogImg2 from "../assets/images/blog2.jpg";
+import blogImg3 from "../assets/images/blog3.jpg";
+import blogImg4 from "../assets/images/blog4.jpg";
+
 const categories = [
   "general",
   "business",
@@ -19,7 +24,7 @@ const categories = [
   "technology",
 ];
 
-const News = () => {
+const News = ({ onShowBlogs }) => {
   const [headline, setHeadline] = useState(null);
 
   const [news, setNews] = useState([]);
@@ -132,7 +137,7 @@ const News = () => {
       <div className="news-content">
         {/* NAVBAR */}
         <div className="navbar">
-          <div className="user">
+          <div className="user" onClick={onShowBlogs}>
             <img src={userImg} alt="User avatar" />
             <p>Swapnil&apos;s Blog</p>
           </div>
@@ -236,7 +241,59 @@ const News = () => {
           onDeleteBookmark={handleBookmarkClick}
         />
 
-        <div className="my-blogs">My Blogs</div>
+        <div className="my-blogs">
+          <h1 className="my-blogs-heading">My Blogs</h1>
+          <div className="blog-posts">
+            <div className="blog-post">
+              <img src={blogImg1} alt="post" />
+              <h3>Lorem ipsum dolor sit.</h3>
+              <div className="post-buttons">
+                <button className="edit-post">
+                  <i className="bx bxs-edit"></i>
+                </button>
+                <button className="delete-post">
+                  <i className="bx bxs-x-circle"></i>
+                </button>
+              </div>
+            </div>
+            <div className="blog-post">
+              <img src={blogImg2} alt="post" />
+              <h3>Lorem ipsum dolor sit.</h3>
+              <div className="post-buttons">
+                <button className="edit-post">
+                  <i className="bx bxs-edit"></i>
+                </button>
+                <button className="delete-post">
+                  <i className="bx bxs-x-circle"></i>
+                </button>
+              </div>
+            </div>
+            <div className="blog-post">
+              <img src={blogImg3} alt="post" />
+              <h3>Lorem ipsum dolor sit.</h3>
+              <div className="post-buttons">
+                <button className="edit-post">
+                  <i className="bx bxs-edit"></i>
+                </button>
+                <button className="delete-post">
+                  <i className="bx bxs-x-circle"></i>
+                </button>
+              </div>
+            </div>
+            <div className="blog-post">
+              <img src={blogImg4} alt="post" />
+              <h3>Lorem ipsum dolor sit.</h3>
+              <div className="post-buttons">
+                <button className="edit-post">
+                  <i className="bx bxs-edit"></i>
+                </button>
+                <button className="delete-post">
+                  <i className="bx bxs-x-circle"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="weather-calendar">
           <Weather />
           <Calendar />
@@ -246,9 +303,7 @@ const News = () => {
         <p>
           <span>News & Blogs App</span>
         </p>
-        <p>
-          &copy; All Rights Reserved. By Swapnil Bhattacharya
-        </p>
+        <p>&copy; All Rights Reserved. By Swapnil Bhattacharya</p>
       </footer>
     </div>
   );
