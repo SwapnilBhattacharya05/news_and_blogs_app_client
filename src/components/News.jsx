@@ -17,12 +17,14 @@ import BlogsModal from "./BlogsModal";
 
 const categories = [
   "general",
+  "world",
+  "nation",
   "business",
-  "entertainment",
-  "health",
-  "science",
-  "sports",
   "technology",
+  "entertainment",
+  "sports",
+  "science",
+  "health",
 ];
 
 const News = ({ onShowBlogs, blogs, onEditBlog, onDeleteBlog }) => {
@@ -55,13 +57,13 @@ const News = ({ onShowBlogs, blogs, onEditBlog, onDeleteBlog }) => {
 
   useEffect(() => {
     const fetchNews = async () => {
-      let url = `https://newsapi.org/v2/top-headlines?country=us&language=en&category=${selectedCategory}&apiKey=${
-        import.meta.env.VITE_REACT_APP_NEWS_API_KEY
+      let url = `https://gnews.io/api/v4/top-headlines?category=${selectedCategory}&lang=en&country=us&max=10&apikey=${
+        import.meta.env.VITE_REACT_APP_GNEWS_API_KEY
       }`;
 
       if (searchQuery) {
-        url = `https://newsapi.org/v2/everything?q=${searchQuery}&language=en&sortBy=popularity&apiKey=${
-          import.meta.env.VITE_REACT_APP_NEWS_API_KEY
+        url = `https://gnews.io/api/v4/search?q=${searchQuery}&lang=en&country=us&max=10&apikey=${
+          import.meta.env.VITE_REACT_APP_GNEWS_API_KEY
         }`;
       }
       const res = await axios.get(url);
@@ -72,8 +74,8 @@ const News = ({ onShowBlogs, blogs, onEditBlog, onDeleteBlog }) => {
 
       fetchedNews.forEach((article) => {
         // console.log(article);
-        if (!article.urlToImage) {
-          article.urlToImage = noImg;
+        if (!article.image) {
+          article.image = noImg;
         }
       });
       setNews(fetchedNews.slice(1, 7)); // GETTING 6 ARTICLES
@@ -186,7 +188,7 @@ const News = ({ onShowBlogs, blogs, onEditBlog, onDeleteBlog }) => {
               className="headline"
               onClick={() => handleArticleClick(headline)}
             >
-              <img src={headline?.urlToImage || noImg} alt={headline?.title} />
+              <img src={headline?.image || noImg} alt={headline?.title} />
               <h2 className="headline-title">
                 {headline?.title}
                 <i
@@ -213,7 +215,7 @@ const News = ({ onShowBlogs, blogs, onEditBlog, onDeleteBlog }) => {
                 onClick={() => handleArticleClick(article)}
               >
                 <img
-                  src={article.urlToImage || noImg}
+                  src={article.image || noImg}
                   alt={article.title}
                   // !HANDLE BROKEN IMAGE LINKS
                   onError={(e) => (e.target.src = noImg)}

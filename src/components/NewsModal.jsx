@@ -16,7 +16,7 @@ const NewsModal = ({ show, article, onClose }) => {
           <>
             <img
               className="modal-image"
-              src={article.urlToImage}
+              src={article.image}
               alt={article.title}
               onError={(e) => (e.target.src = noImg)}
             />

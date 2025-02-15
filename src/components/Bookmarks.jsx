@@ -30,7 +30,7 @@ const Bookmarks = ({
               className="bookmark-item"
             >
               <img
-                src={article.urlToImage || noImg}
+                src={article.image || noImg}
                 alt={article.title}
                 onError={(e) => (e.target.src = noImg)}
               />
