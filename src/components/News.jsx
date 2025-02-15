@@ -13,6 +13,7 @@ import blogImg1 from "../assets/images/blog1.jpg";
 import blogImg2 from "../assets/images/blog2.jpg";
 import blogImg3 from "../assets/images/blog3.jpg";
 import blogImg4 from "../assets/images/blog4.jpg";
+import BlogsModal from "./BlogsModal";
 
 const categories = [
   "general",
@@ -24,7 +25,7 @@ const categories = [
   "technology",
 ];
 
-const News = ({ onShowBlogs }) => {
+const News = ({ onShowBlogs, blogs, onEditBlog, onDeleteBlog }) => {
   const [headline, setHeadline] = useState(null);
 
   const [news, setNews] = useState([]);
@@ -47,6 +48,10 @@ const News = ({ onShowBlogs }) => {
 
   // CONTROL OF BOOKMARKS MODAL
   const [showBookmarksModal, setShowBookmarksModal] = useState(false);
+
+  const [selectedPost, setSelectedPost] = useState(null);
+
+  const [showBlogModal, setShowBlogModal] = useState(false);
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -114,6 +119,16 @@ const News = ({ onShowBlogs }) => {
       localStorage.setItem("bookmarks", JSON.stringify(updatedBookmarks)); // TODO: CHANGE IT TO MONGODB LATER
       return updatedBookmarks;
     });
+  };
+
+  const handleBlogClick = (blog) => {
+    setSelectedPost(blog);
+    setShowBlogModal(true);
+  };
+
+  const closeBlogModal = () => {
+    setShowBlogModal(false);
+    setSelectedPost(null);
   };
 
   return (
@@ -244,55 +259,42 @@ const News = ({ onShowBlogs }) => {
         <div className="my-blogs">
           <h1 className="my-blogs-heading">My Blogs</h1>
           <div className="blog-posts">
-            <div className="blog-post">
-              <img src={blogImg1} alt="post" />
-              <h3>Lorem ipsum dolor sit.</h3>
-              <div className="post-buttons">
-                <button className="edit-post">
-                  <i className="bx bxs-edit"></i>
-                </button>
-                <button className="delete-post">
-                  <i className="bx bxs-x-circle"></i>
-                </button>
+            {blogs.map((blog, index) => (
+              <div
+                key={index}
+                className="blog-post"
+                onClick={() => handleBlogClick(blog)}
+              >
+                <img src={blog.image || noImg} alt={blog.title} />
+                <h3>{blog.title}</h3>
+                {/* <p>{blog.content}</p> */}
+                <div className="post-buttons">
+                  <button
+                    className="edit-post"
+                    onClick={() => onEditBlog(blog)}
+                  >
+                    <i className="bx bxs-edit"></i>
+                  </button>
+                  <button
+                    className="delete-post"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDeleteBlog(blog);
+                    }}
+                  >
+                    <i className="bx bxs-x-circle"></i>
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className="blog-post">
-              <img src={blogImg2} alt="post" />
-              <h3>Lorem ipsum dolor sit.</h3>
-              <div className="post-buttons">
-                <button className="edit-post">
-                  <i className="bx bxs-edit"></i>
-                </button>
-                <button className="delete-post">
-                  <i className="bx bxs-x-circle"></i>
-                </button>
-              </div>
-            </div>
-            <div className="blog-post">
-              <img src={blogImg3} alt="post" />
-              <h3>Lorem ipsum dolor sit.</h3>
-              <div className="post-buttons">
-                <button className="edit-post">
-                  <i className="bx bxs-edit"></i>
-                </button>
-                <button className="delete-post">
-                  <i className="bx bxs-x-circle"></i>
-                </button>
-              </div>
-            </div>
-            <div className="blog-post">
-              <img src={blogImg4} alt="post" />
-              <h3>Lorem ipsum dolor sit.</h3>
-              <div className="post-buttons">
-                <button className="edit-post">
-                  <i className="bx bxs-edit"></i>
-                </button>
-                <button className="delete-post">
-                  <i className="bx bxs-x-circle"></i>
-                </button>
-              </div>
-            </div>
+            ))}
           </div>
+          {selectedPost && showBlogModal && (
+            <BlogsModal
+              show={showBlogModal}
+              blog={selectedPost}
+              onClose={closeBlogModal}
+            />
+          )}
         </div>
         <div className="weather-calendar">
           <Weather />

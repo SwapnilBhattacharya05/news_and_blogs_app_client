@@ -1,10 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Blogs from "./components/Blogs";
 import News from "./components/News";
 
 const App = () => {
   const [showNews, setShowNews] = useState(true);
   const [showBlogs, setShowBlogs] = useState(false);
+
+  // LIST OF BLOGS AND DEFINE FUNCTION TO ADD BLOGS
+  const [blogs, setBlogs] = useState([]);
+
+  const [selectedPost, setSelectedPost] = useState(null);
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => {
+    const savedBlogs = JSON.parse(localStorage.getItem("blogs")) || [];
+    setBlogs(savedBlogs);
+  }, []);
+
+  const handleCreateBlog = (newBlog, isEdit) => {
+    setBlogs((prevBlogs) => {
+      const updatedBlogs = isEdit
+        ? prevBlogs.map((blog) => (blog === selectedPost ? newBlog : blog))
+        : [...prevBlogs, newBlog];
+
+      localStorage.setItem("blogs", JSON.stringify(updatedBlogs)); // TODO: CHANGE IT TO MONGODB LATER
+      return updatedBlogs;
+    });
+    setIsEditing(false);
+    setSelectedPost(null);
+  };
+
+  const handleEditBlog = (blog) => {
+    setSelectedPost(blog);
+    setIsEditing(true);
+    setShowNews(false);
+    setShowBlogs(true);
+  };
+
+  const handleDeleteBlog = (blogToDelete) => {
+    setBlogs((prevBlogs) => {
+      const updatedBlogs = prevBlogs.filter((blog) => blog !== blogToDelete);
+      localStorage.setItem("blogs", JSON.stringify(updatedBlogs));
+      return updatedBlogs;
+    });
+  };
 
   const handleShowBlogs = () => {
     setShowNews(false);
@@ -14,13 +54,29 @@ const App = () => {
   const handleBackToNews = () => {
     setShowNews(true);
     setShowBlogs(false);
+    setIsEditing(false);
+    setSelectedPost(null);
   };
 
   return (
     <div className="container">
       <div className="news-blogs-app">
-        {showNews && <News onShowBlogs={handleShowBlogs} />}
-        {showBlogs && <Blogs onBack={handleBackToNews}  />}
+        {showNews && (
+          <News
+            onShowBlogs={handleShowBlogs}
+            blogs={blogs}
+            onEditBlog={handleEditBlog}
+            onDeleteBlog={handleDeleteBlog}
+          />
+        )}
+        {showBlogs && (
+          <Blogs
+            onBack={handleBackToNews}
+            onCreateBlog={handleCreateBlog}
+            editPost={selectedPost}
+            isEditing={isEditing}
+          />
+        )}
       </div>
     </div>
   );

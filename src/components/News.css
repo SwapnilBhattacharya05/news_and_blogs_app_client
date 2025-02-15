@@ -369,3 +369,163 @@
   font-family: "Bebas Neue", sans-serif;
   font-size: 2rem;
 }
+
+@media (max-width: 1400px) {
+  .nav-links {
+    row-gap: 1rem;
+  }
+
+  .news-section {
+    overflow: hidden;
+  }
+  .news-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    overflow-y: scroll;
+  }
+  .news-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .blog-posts {
+    overflow-y: scroll;
+  }
+
+  .blog-posts::-webkit-scrollbar {
+    display: none;
+  }
+
+  .blog-post {
+    flex: 0 1 calc(100% - 0.6rem);
+  }
+}
+
+@media (max-width: 1024px) {
+  .news-grid {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .news {
+    height: 100%;
+    overflow-y: scroll;
+  }
+
+  .news::-webkit-scrollbar {
+    display: none;
+  }
+
+  .news-content {
+    flex-direction: column;
+    width: 100%;
+    height: 200rem;
+    row-gap: 2rem;
+  }
+
+  .navbar {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 18rem;
+  }
+  .user {
+    width: calc(30% - 2rem);
+    height: 100%;
+  }
+
+  .categories {
+    width: 70%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    row-gap: 1rem;
+  }
+
+  .nav-links {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-link {
+    margin-right: 2rem;
+  }
+
+  .news-section {
+    width: 100%;
+  }
+  .news-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+  }
+
+  .my-blogs {
+    width: 100%;
+  }
+
+  .blog-post {
+    flex: 0 1 calc(50% - 0.6rem);
+  }
+
+  .weather-calendar {
+    flex-direction: row;
+    column-gap: 2rem;
+  }
+}
+
+@media (max-width: 500px) {
+  .news-header {
+    padding: 0 2rem;
+  }
+
+  .logo {
+    font-size: 3.5rem;
+  }
+
+  .search-bar input {
+    width: 18rem;
+  }
+  .search-bar input:focus {
+    width: 23rem;
+  }
+
+  .navbar {
+    flex-direction: column;
+    height: 30rem;
+    margin-bottom: 2rem;
+  }
+
+  .user {
+    width: 100%;
+    min-height: 40%;
+  }
+
+  .user p {
+    display: none;
+  }
+  .categories {
+    width: 100%;
+  }
+
+  .nav-heading {
+    display: none;
+  }
+
+  .news-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  .weather-calendar {
+    flex-direction: column;
+  }
+
+  .news-footer {
+    min-height: 8rem;
+    flex-direction: column;
+    justify-content: center;
+    row-gap: 1rem;
+  }
+}
