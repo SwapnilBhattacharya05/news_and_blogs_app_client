@@ -89,11 +89,12 @@ const News = ({ onShowBlogs, blogs, onEditBlog, onDeleteBlog }) => {
     };
 
     fetchNews();
-  }, [searchQuery, selectedCategory]);
+  }, [selectedCategory, searchQuery]);
 
   const handleCategoryClick = (e, category) => {
     e.preventDefault(); // e => EVENT OBJECT
     setSelectedCategory(category);
+    setSearchQuery("");
   };
 
   const handleSearch = (e) => {
