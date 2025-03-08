@@ -103,6 +103,22 @@
   color: #ddd;
 }
 
+.login-btn {
+  background: linear-gradient(to right, #b88efc, #6877f4);
+  color: #fff;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 5px;
+  font-size: 1.5rem;
+  transition: background 0.3s ease;
+}
+
+.login-btn:hover {
+  background: linear-gradient(to left, #9570d1, #5561ce);
+}
+
 .user img {
   width: 7rem;
   aspect-ratio: 1;
@@ -505,6 +521,7 @@
   .user p {
     display: none;
   }
+
   .categories {
     width: 100%;
   }

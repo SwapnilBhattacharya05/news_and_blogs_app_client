@@ -9,11 +9,9 @@ import { useEffect, useState } from "react";
 import NewsModal from "./NewsModal";
 import Bookmarks from "./Bookmarks";
 
-import blogImg1 from "../assets/images/blog1.jpg";
-import blogImg2 from "../assets/images/blog2.jpg";
-import blogImg3 from "../assets/images/blog3.jpg";
-import blogImg4 from "../assets/images/blog4.jpg";
 import BlogsModal from "./BlogsModal";
+
+import { useAuth0 } from "@auth0/auth0-react";
 
 const categories = [
   "general",
@@ -54,6 +52,8 @@ const News = ({ onShowBlogs, blogs, onEditBlog, onDeleteBlog }) => {
   const [selectedPost, setSelectedPost] = useState(null);
 
   const [showBlogModal, setShowBlogModal] = useState(false);
+
+  const { loginWithRedirect, user, isAuthenticated } = useAuth0(); // Get authentication status, user info, and login function
 
   useEffect(() => {
     const fetchNews = async () => {
@@ -155,9 +155,27 @@ const News = ({ onShowBlogs, blogs, onEditBlog, onDeleteBlog }) => {
       <div className="news-content">
         {/* NAVBAR */}
         <div className="navbar">
-          <div className="user" onClick={onShowBlogs}>
-            <img src={userImg} alt="User avatar" />
-            <p>Swapnil&apos;s Blog</p>
+          <div className="user">
+            {/* If user is authenticated, show their profile & allow access to blogs */}
+            {isAuthenticated ? (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  rowGap: "1rem",
+                }}
+                onClick={onShowBlogs}
+              >
+                <img src={user.picture || userImg} alt="User avatar" />
+                <p>{user.name.split(" ")[0]}&apos;s Blog</p>
+              </div>
+            ) : (
+              // If user is NOT authenticated, show Login/Register button
+              <button onClick={() => loginWithRedirect()} className="login-btn">
+                👋 Join us
+              </button>
+            )}
           </div>
           <nav className="categories">
             <h1 className="nav-heading">Categories</h1>
@@ -271,23 +289,25 @@ const News = ({ onShowBlogs, blogs, onEditBlog, onDeleteBlog }) => {
                 <img src={blog.image || noImg} alt={blog.title} />
                 <h3>{blog.title}</h3>
                 {/* <p>{blog.content}</p> */}
-                <div className="post-buttons">
-                  <button
-                    className="edit-post"
-                    onClick={() => onEditBlog(blog)}
-                  >
-                    <i className="bx bxs-edit"></i>
-                  </button>
-                  <button
-                    className="delete-post"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDeleteBlog(blog);
-                    }}
-                  >
-                    <i className="bx bxs-x-circle"></i>
-                  </button>
-                </div>
+                {isAuthenticated && user?.email === blog.author?.email && (
+                  <div className="post-buttons">
+                    <button
+                      className="edit-post"
+                      onClick={() => onEditBlog(blog)}
+                    >
+                      <i className="bx bxs-edit"></i>
+                    </button>
+                    <button
+                      className="delete-post"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDeleteBlog(blog);
+                      }}
+                    >
+                      <i className="bx bxs-x-circle"></i>
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
           </div>

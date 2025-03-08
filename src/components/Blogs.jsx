@@ -3,12 +3,17 @@ import userImg from "../assets/images/user.jpg";
 import noImg from "../assets/images/no-img.png";
 import "./Blogs.css";
 
+import { useAuth0 } from "@auth0/auth0-react";
+import axios from "axios";
+
 const Blogs = ({ onBack, onCreateBlog, editPost, isEditing }) => {
   const [showForm, setShowForm] = useState(false);
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [submitted, setSubmitted] = useState(false);
+
+  const { user, logout } = useAuth0();
 
   useEffect(() => {
     if (isEditing && editPost) {
@@ -64,7 +69,7 @@ const Blogs = ({ onBack, onCreateBlog, editPost, isEditing }) => {
     setContentValid(true);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title || !content) {
       if (!title) setTitleValid(false);
@@ -76,26 +81,53 @@ const Blogs = ({ onBack, onCreateBlog, editPost, isEditing }) => {
       image: image || noImg,
       title,
       content,
+      auth0Id: user.sub, // Pass Auth0 ID for user association
     };
 
-    onCreateBlog(newBlog, isEditing);
-    setImage(null);
-    setTitle("");
-    setContent("");
-    setShowForm(false);
-    setSubmitted(true);
-    setTimeout(() => {
-      // HIDE SUBMISSION MESSAGE
-      setSubmitted(false);
-      // NAVIGATE BACK TO NEWS PAGE
-      onBack();
-    }, 3000);
+    try {
+      if (isEditing && editPost) {
+        // If editing, send PUT request to update existing blog
+        await axios.patch(
+          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/v1/blogs/${
+            editPost._id
+          }`,
+          newBlog
+        );
+      } else {
+        // If creating, send POST request to create new blog
+        await axios.post(
+          `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/v1/blogs`,
+          newBlog
+        );
+      }
+
+      setImage(null);
+      setTitle("");
+      setContent("");
+      setShowForm(false);
+      setSubmitted(true);
+
+      setTimeout(() => {
+        setSubmitted(false);
+        onBack();
+      }, 3000);
+    } catch (error) {
+      console.error("Error saving blog:", error);
+    }
   };
 
   return (
     <div className="blogs">
       <div className="blogs-left">
-        <img src={userImg} alt="user" />
+        <img src={user.picture || userImg} alt="user" />
+
+        {/* Logout Button */}
+        <button
+          className="logout-btn"
+          onClick={() => logout({ returnTo: window.location.origin })}
+        >
+          Logout
+        </button>
       </div>
       <div className="blogs-right">
         {!showForm && !submitted && (

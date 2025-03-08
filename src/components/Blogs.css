@@ -29,6 +29,30 @@
   transform: translateY(-50%);
 }
 
+.logout-btn {
+  position: absolute;
+  bottom: 5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(to right, #b88efc, #6877f4);
+  border: none;
+  border-radius: 5rem;
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  color: #fff;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: linear-gradient(to left, #b88efc, #6877f4);
+}
+
+.logout-btn:active {
+  transform: translateX(-50%) translateY(0.2rem);
+}
+
 .blogs-right {
   width: 50%;
   height: 100%;
