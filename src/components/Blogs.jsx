@@ -213,7 +213,11 @@ const Blogs = ({ onBack, onCreateBlog, editPost, isEditing }) => {
               value={content}
               onChange={handleContentChange}
             />
-            <button type="submit" className="submit-btn" disabled={isUploading}>
+            <button
+              type="submit"
+              className="submit-btn"
+              disabled={isUploading || submitted}
+            >
               {isEditing ? "Update Post" : "Publish Post"}
             </button>
           </form>
