@@ -140,8 +140,7 @@ const Blogs = ({ onBack, onCreateBlog, editPost, isEditing }) => {
 
       setTimeout(() => {
         setSubmitted(true);
-        onBack();
-      }, 1000);
+      }, 500);
 
       setTimeout(() => {
         setSubmitted(false);
