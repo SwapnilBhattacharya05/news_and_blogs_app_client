@@ -108,8 +108,6 @@ const Blogs = ({ onBack, onCreateBlog, editPost, isEditing }) => {
       return;
     }
 
-    setSubmitted(true); // DISABLE SUBMIT BUTTON
-
     const newBlog = {
       image: image || noImg,
       title,
@@ -139,6 +137,11 @@ const Blogs = ({ onBack, onCreateBlog, editPost, isEditing }) => {
       setContent("");
       setShowForm(false);
       setSubmitted(true);
+
+      setTimeout(() => {
+        setSubmitted(true);
+        onBack();
+      }, 1000);
 
       setTimeout(() => {
         setSubmitted(false);
