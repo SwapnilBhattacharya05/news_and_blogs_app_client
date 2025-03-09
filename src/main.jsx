@@ -4,6 +4,8 @@ import { BrowserRouter } from "react-router-dom";
 import { Auth0Provider } from "@auth0/auth0-react";
 import App from "./App.jsx";
 import "./index.css";
+import { Flip, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
@@ -14,6 +16,11 @@ createRoot(document.getElementById("root")).render(
       cacheLocation="localstorage"
     >
       <App />
+      <ToastContainer
+        autoClose={2000}
+        position="bottom-right"
+        transition={Flip}
+      />
     </Auth0Provider>
   </BrowserRouter>
 );
