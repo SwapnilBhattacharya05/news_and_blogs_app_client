@@ -108,6 +108,8 @@ const Blogs = ({ onBack, onCreateBlog, editPost, isEditing }) => {
       return;
     }
 
+    setSubmitted(true); // DISABLE SUBMIT BUTTON
+
     const newBlog = {
       image: image || noImg,
       title,
@@ -144,6 +146,7 @@ const Blogs = ({ onBack, onCreateBlog, editPost, isEditing }) => {
       }, 3000);
     } catch (error) {
       console.error("Error saving blog:", error);
+      setSubmitted(false); // ENABLE SUBMIT BUTTON ON ERROR
     }
   };
 
@@ -216,7 +219,7 @@ const Blogs = ({ onBack, onCreateBlog, editPost, isEditing }) => {
             <button
               type="submit"
               className="submit-btn"
-              disabled={isUploading || submitted}
+              disabled={submitted || isUploading}
             >
               {isEditing ? "Update Post" : "Publish Post"}
             </button>
