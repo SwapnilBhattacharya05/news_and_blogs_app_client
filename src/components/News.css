@@ -300,12 +300,18 @@
   gap: 1.2rem;
   padding: 1.2rem;
   justify-content: space-between;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .blog-post {
   flex: 0 1 calc(50% - 0.6rem);
   border-radius: 1rem;
   position: relative;
+  height: 6.6em;
+  width: 100%;
 }
 
 .blog-post img {

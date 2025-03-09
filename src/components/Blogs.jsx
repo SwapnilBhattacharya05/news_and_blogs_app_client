@@ -6,12 +6,17 @@ import "./Blogs.css";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 
+import { IKContext, IKUpload } from "imagekitio-react";
+
+import { toast } from "react-toastify";
+
 const Blogs = ({ onBack, onCreateBlog, editPost, isEditing }) => {
   const [showForm, setShowForm] = useState(false);
   const [image, setImage] = useState(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [isUploading, setUploading] = useState(false);
 
   const { user, logout } = useAuth0();
 
@@ -33,29 +38,55 @@ const Blogs = ({ onBack, onCreateBlog, editPost, isEditing }) => {
   const [titleValid, setTitleValid] = useState(true);
   const [contentValid, setContentValid] = useState(true);
 
-  const handleImageChange = (e) => {
-    // CHECK IF ANY FILES SELECTED BY USER
-    // LIST OF ALL THE FILES SELECTED BY USER AND GET THE FIRST ONE
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      const maxSize = 1 * 1024 * 1024;
+  // const handleImageChange = (e) => {
+  //   // CHECK IF ANY FILES SELECTED BY USER
+  //   // LIST OF ALL THE FILES SELECTED BY USER AND GET THE FIRST ONE
+  //   if (e.target.files && e.target.files[0]) {
+  //     const file = e.target.files[0];
+  //     const maxSize = 1 * 1024 * 1024;
 
-      if (file.size > maxSize) {
-        alert("File size exceeds 1 MB");
-        return;
-      }
+  //     if (file.size > maxSize) {
+  //       alert("File size exceeds 1 MB");
+  //       return;
+  //     }
 
-      // READ THE FILE'S CONTENT SELECTED BY USER
-      const reader = new FileReader();
+  //     // READ THE FILE'S CONTENT SELECTED BY USER
+  //     const reader = new FileReader();
 
-      // EVENT TRIGGERED WHEN FILE READING OPERATION COMPLETED
-      reader.onload = () => {
-        // CONTAINS THE BASE64 ENCODED FILE CONTENT
-        setImage(reader.result);
-      };
+  //     // EVENT TRIGGERED WHEN FILE READING OPERATION COMPLETED
+  //     reader.onload = () => {
+  //       // CONTAINS THE BASE64 ENCODED FILE CONTENT
+  //       setImage(reader.result);
+  //     };
 
-      // READ THE FILE CONTENT AND CONVERTS IT TO BASE64 ENCODED STRING
-      reader.readAsDataURL(file);
+  //     // READ THE FILE CONTENT AND CONVERTS IT TO BASE64 ENCODED STRING
+  //     reader.readAsDataURL(file);
+  //   }
+  // };
+
+  const handleUploadSuccess = (res) => {
+    setUploading(false);
+    toast.success("Image uploaded successfully");
+    console.log(`Upload Success URL: ${JSON.stringify(res, null, 2)}`);
+    setImage(res.url); // STORE THE URL OF UPLOADED IMAGE
+  };
+
+  const handleUploadError = (err) => {
+    setUploading(false);
+    toast.error("Image upload failed!");
+    console.log(`Upload Error: ${err}`);
+  };
+
+  const authenticator = async () => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/api/v1/images/auth`
+      );
+      console.log("Auth Response:", response.data);
+      const { expire, signature, token } = response.data.data;
+      return { expire, signature, token };
+    } catch (error) {
+      console.error("Error authenticating with ImageKit:", error);
     }
   };
 
@@ -125,6 +156,7 @@ const Blogs = ({ onBack, onCreateBlog, editPost, isEditing }) => {
         <button
           className="logout-btn"
           onClick={() => logout({ returnTo: window.location.origin })}
+          disabled={isUploading}
         >
           Logout
         </button>
@@ -135,7 +167,11 @@ const Blogs = ({ onBack, onCreateBlog, editPost, isEditing }) => {
             Create New Post
           </button>
         )}
-        {submitted && <p className="submission-message">Post Published!</p>}
+        {submitted && (
+          <p className="submission-message">
+            {isEditing ? "Post Updated!" : "Post Published!"}
+          </p>
+        )}
         <div className={`blogs-right-form ${showForm ? "visible" : "hidden"}`}>
           <h1>{isEditing ? "Edit Post" : "New Post"}</h1>
           <form onSubmit={handleSubmit}>
@@ -143,11 +179,25 @@ const Blogs = ({ onBack, onCreateBlog, editPost, isEditing }) => {
               <label htmlFor="file-upload" className="file-upload">
                 <i className="bx bx-upload"></i> Upload Image
               </label>
-              <input
-                type="file"
-                id="file-upload"
-                onChange={handleImageChange}
-              />
+              <IKContext
+                publicKey={import.meta.env.VITE_REACT_APP_IMAGEKIT_PUBLIC_KEY}
+                urlEndpoint={
+                  import.meta.env.VITE_REACT_APP_IMAGEKIT_URL_ENDPOINT
+                }
+                authenticator={authenticator}
+              >
+                <IKUpload
+                  className="file-input"
+                  onSuccess={handleUploadSuccess}
+                  onError={handleUploadError}
+                  multiple={false}
+                  type="image/*"
+                  name="image"
+                  id="file-upload"
+                  folder="blog_app/images"
+                  onUploadStart={() => setUploading(true)}
+                />
+              </IKContext>
             </div>
             <input
               type="text"
@@ -163,13 +213,17 @@ const Blogs = ({ onBack, onCreateBlog, editPost, isEditing }) => {
               value={content}
               onChange={handleContentChange}
             />
-            <button type="submit" className="submit-btn">
+            <button type="submit" className="submit-btn" disabled={isUploading}>
               {isEditing ? "Update Post" : "Publish Post"}
             </button>
           </form>
         </div>
 
-        <button className="blogs-close-btn" onClick={onBack}>
+        <button
+          className="blogs-close-btn"
+          onClick={onBack}
+          disabled={isUploading}
+        >
           Back <i className="bx bx-chevron-right"></i>
         </button>
       </div>

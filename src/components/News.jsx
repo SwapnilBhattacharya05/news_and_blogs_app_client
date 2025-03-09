@@ -278,7 +278,7 @@ const News = ({ onShowBlogs, blogs, onEditBlog, onDeleteBlog }) => {
         />
 
         <div className="my-blogs">
-          <h1 className="my-blogs-heading">My Blogs</h1>
+          <h1 className="my-blogs-heading">Blogs</h1>
           <div className="blog-posts">
             {blogs.map((blog, index) => (
               <div
